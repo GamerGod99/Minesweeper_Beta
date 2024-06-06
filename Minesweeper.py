@@ -1,6 +1,6 @@
 import random
 
-#https://minesweeper.us/saper/
+# https://minesweeper.us/saper/
 
 
 IMG = {
@@ -25,7 +25,6 @@ IMG = {
 
 
 class Tile:
-
     COVERED = 0
     CLICKED = 1
     FLAGGED = 2
@@ -39,7 +38,7 @@ class Tile:
         self.y = y
         self.value = value
         self.state = state
-    
+
     def __repr__(self) -> str:
         if self.state == self.COVERED:
             return IMG["COVERED"]
@@ -55,12 +54,11 @@ class Tile:
 
 
 class Minesweeper:
-
     around = [
-        (-1, -1), ( 0, -1), ( 1, -1),
-        (-1,  0),           ( 1,  0),
-        (-1,  1), ( 0,  1), ( 1,  1),]
-    
+        (-1, -1), (0, -1), (1, -1),
+        (-1, 0), (1, 0),
+        (-1, 1), (0, 1), (1, 1), ]
+
     def __init__(self, sizeY, sizeX, mines):
         self.sizeY = sizeY
         self.sizeX = sizeX
@@ -73,7 +71,7 @@ class Minesweeper:
 
     def __repr__(self):
         return '\n' + '\n'.join('\t' + ' '.join(str(tile) for tile in row) for row in self.plane) + '\n'
-    
+
     def __plant(self):
         random.shuffle(mines := [Tile.MINE for i in range(self.mines)] + [0] * (self.sizeX * self.sizeY - self.mines))
 
@@ -111,7 +109,7 @@ class Minesweeper:
                 else:
                     game_over = self.game_over(y, x)
         return game_over
-    
+
     def game_over(self, y, x):
         self.change_stat(self.plane[y][x], Tile.EXPLOSION)
         self.covered -= 1
@@ -137,7 +135,7 @@ class Minesweeper:
         game_over = 0
         tile = self.plane[y][x]
         self.history.clear()
-        if btn == 0:
+        if btn == 3:
             if tile.state == Tile.COVERED:
                 if self.moves < 1:
                     game_over = self.check_around(y, x)
@@ -167,7 +165,8 @@ class Minesweeper:
 
 
 def print_plant(m):
-    print('\n' + '\n'.join('\t' + ' '.join(str(tile.value if tile.value < 9 else "*") for tile in row) for row in m.plane) + '\n')
+    print('\n' + '\n'.join(
+        '\t' + ' '.join(str(tile.value if tile.value < 9 else "*") for tile in row) for row in m.plane) + '\n')
 
 
 if __name__ == "__main__":
@@ -185,6 +184,6 @@ if __name__ == "__main__":
             print(ms)
             print('\t' * 4 + f"Moves: {ms.moves}" + '\n' + '\t' * 4 + f"Flags: {ms.flags}")
             break
-        
+
         print('\t' * 4 + f"Moves: {ms.moves}" + '\n' + '\t' * 4 + f"Flags: {ms.flags}")
         print(ms)

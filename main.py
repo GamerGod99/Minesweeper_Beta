@@ -5,6 +5,7 @@ from settings import *
 
 class Game:
     def __init__(self):
+        pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
@@ -32,15 +33,17 @@ class Game:
         self.screen.blit(self.board_surface, (0, 0))
 
     def run(self):
+        mouse_on = True
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit(0)
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if mouse_on and event.type == pygame.MOUSEBUTTONDOWN:
                     mx, my = pygame.mouse.get_pos()
-                    self.ms.click(my // TILESIZE, mx // TILESIZE, event.button)
+                    if self.ms.click(my // TILESIZE, mx // TILESIZE, event.button):
+                        mouse_on = False
                     self.draw()
                     pygame.display.flip()
 

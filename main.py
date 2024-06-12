@@ -40,7 +40,10 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mx, my = pygame.mouse.get_pos()
+
+                    # Changes need to be made here so that the application terminates when a mine is discovered.
                     self.ms.click(my // TILESIZE, mx // TILESIZE, event.button)
+
                     self.draw()
                     pygame.display.flip()
 

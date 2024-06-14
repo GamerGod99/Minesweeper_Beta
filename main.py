@@ -42,6 +42,7 @@ class Game:
 
                 if mouse_on and event.type == pygame.MOUSEBUTTONDOWN:
                     mx, my = pygame.mouse.get_pos()
+
                     if self.ms.click(my // TILESIZE, mx // TILESIZE, event.button):
                         mouse_on = False
                     self.draw()

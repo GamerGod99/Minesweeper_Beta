@@ -110,9 +110,10 @@ class Minesweeper:
                     game_over = self.game_over(y, x)
         return game_over
 
-    def game_over(self, y, x):
-        self.change_stat(self.plane[y][x], Tile.EXPLOSION)
-        self.covered -= 1
+    def game_over(self, y, x, go=1):
+        if go == 1:
+            self.change_stat(self.plane[y][x], Tile.EXPLOSION)
+            self.covered -= 1
 
         for y in range(self.sizeY):
             for x in range(self.sizeX):
@@ -120,8 +121,8 @@ class Minesweeper:
                 if tile.value == Tile.MINE and tile.state == Tile.COVERED:
                     self.change_stat(tile, Tile.CLICKED)
                     self.covered -= 1
-                # if tile.value == Tile.MINE and tile.state == Tile.FLAGGED:
-                #     tile.state == Tile.FLAGGED
+                if tile.value == Tile.MINE and tile.state == Tile.FLAGGED:
+                    tile.state = Tile.CLICKED
                 if tile.value != Tile.MINE and tile.state == Tile.FLAGGED:
                     self.change_stat(tile, Tile.NOT_MINE)
                     self.covered -= 1
@@ -159,6 +160,7 @@ class Minesweeper:
             elif tile.state == Tile.FLAGGED:
                 pass
         if self.flags >= 0 and (self.mines - self.flags + self.covered) == self.mines:
+            self.game_over(y, x, 2)
             game_over = 2
 
         return game_over

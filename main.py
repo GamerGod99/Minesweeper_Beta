@@ -39,7 +39,7 @@ class Game:
                     pygame.quit()
                     quit(0)
 
-                if event.type == pygame.MOUSEBUTTONDOWN and game_over != 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and game_over not in (1, 2):
                     mx, my = pygame.mouse.get_pos()
 
                     game_over = self.ms.click(my // TILESIZE, mx // TILESIZE, event.button)
@@ -48,7 +48,7 @@ class Game:
                     pygame.display.flip()
 
 
-if __name__ == "__main__": #     1212e
+if __name__ == "__main__":
     game = Game()
     game.board()
     game.run()

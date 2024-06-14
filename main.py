@@ -32,23 +32,23 @@ class Game:
         self.screen.blit(self.board_surface, (0, 0))
 
     def run(self):
+        game_over = 0
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit(0)
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and game_over != 1:
                     mx, my = pygame.mouse.get_pos()
 
-                    # Changes need to be made here so that the application terminates when a mine is discovered.
-                    self.ms.click(my // TILESIZE, mx // TILESIZE, event.button)
+                    game_over = self.ms.click(my // TILESIZE, mx // TILESIZE, event.button)
 
                     self.draw()
                     pygame.display.flip()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": #     1212e
     game = Game()
     game.board()
     game.run()

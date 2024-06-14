@@ -48,7 +48,7 @@ class Game:
                     pygame.display.flip()
 
 
-if __name__ == "__main__": # asdfadf
+if __name__ == "__main__":
     game = Game()
     game.board()
     game.run()

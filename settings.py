@@ -4,7 +4,7 @@ import os
 TILESIZE = 32
 ROWS = 15
 COLS = 15
-AMOUNT_MINES = 20
+AMOUNT_MINES = 5
 W = TILESIZE * ROWS
 H1 = TILESIZE * 3
 H2 = TILESIZE * COLS
@@ -28,3 +28,4 @@ button_off = pygame.transform.scale(pygame.image.load(os.path.join("assets", "bu
 button_on = pygame.transform.scale(pygame.image.load(os.path.join("assets", "button_on.png")), (W_RESET_BUTTON, H_RESET_BUTTON))
 button_o = pygame.transform.scale(pygame.image.load(os.path.join("assets", "button_o.png")), (W_RESET_BUTTON, H_RESET_BUTTON))
 button_x = pygame.transform.scale(pygame.image.load(os.path.join("assets", "button_x.png")), (W_RESET_BUTTON, H_RESET_BUTTON))
+button_win = pygame.transform.scale(pygame.image.load(os.path.join("assets", "button_win.png")), (W_RESET_BUTTON, H_RESET_BUTTON))

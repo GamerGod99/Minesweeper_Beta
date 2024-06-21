@@ -29,6 +29,7 @@ class Game:
         self.screen = pygame.display.set_mode((W, H1 + H2))
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
+        self.reset_button = button_off
 
     def board(self):
         self.ms = Minesweeper(COLS, ROWS, AMOUNT_MINES)
@@ -41,7 +42,7 @@ class Game:
 
     def draw(self):
         self.score_surface.fill(BACKGROUND_COLOR)
-        self.score_surface.blit(button_off, (X_RESET_BUTTON, Y_RESET_BUTTON))
+        self.score_surface.blit(self.reset_button, (X_RESET_BUTTON, Y_RESET_BUTTON))
         self.nr_flags = pygame.font.Font.render(self.font, f"{self.ms.flags:03}", True, (255, 0, 0))
         self.time_text = pygame.font.Font.render(self.font, f"{self.t.current():03}", True, (255, 0, 0))
         self.score_surface.blit(self.nr_flags, (20, (H1 - FONT_SIZE) // 2))
@@ -79,9 +80,16 @@ class Game:
                         break
                     elif mouse_on and H1 <= my < H1 + H2:
                         self.t.start()
-                        if self.ms.click((my - H1) // TILESIZE, mx // TILESIZE, event.button):
+                        if button := self.ms.click((my - H1) // TILESIZE, mx // TILESIZE, event.button):
                             mouse_on = False
                             self.t.stop()
+                            match button:
+                                case 1:
+                                    self.reset_button = button_x
+                                case 2:
+                                    self.reset_button = button_win
+                                case _:
+                                    self.reset_button = button_off
             self.draw()
             pygame.display.flip()
 

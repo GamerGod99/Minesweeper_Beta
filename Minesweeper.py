@@ -95,40 +95,41 @@ class Minesweeper:
 
     def check_around(self, y, x):
         game_over = 0
-        if 0 <= x < self.sizeX and 0 <= y < self.sizeY:  # If chosen coords are part of the plane
+        if 0 <= x < self.sizeX and 0 <= y < self.sizeY:
             tile = self.plane[y][x]
             if tile.state == Tile.COVERED:
                 if tile.value == 0:
-                    self.change_state(tile, Tile.CLICKED)
+                    self.change_stat(tile, Tile.CLICKED)
                     self.covered -= 1
                     for step_y, step_x in self.around:
-                        self.check_around(y + step_y, x + step_x)  # Checks the tiles around chosen tile.
+                        self.check_around(y + step_y, x + step_x)
                 elif 0 < tile.value < 9:
-                    self.change_state(tile, Tile.CLICKED)
+                    self.change_stat(tile, Tile.CLICKED)
                     self.covered -= 1
-                else:  # Tile is a mine
+                else:
                     game_over = self.game_over(y, x)
         return game_over
 
-    def game_over(self, y, x):
-        self.change_state(self.plane[y][x], Tile.EXPLOSION)
-        self.covered -= 1
+    def game_over(self, y, x, go=1):
+        if go == 1:
+            self.change_stat(self.plane[y][x], Tile.EXPLOSION)
+            self.covered -= 1
 
         for y in range(self.sizeY):
             for x in range(self.sizeX):
                 tile = self.plane[y][x]
                 if tile.value == Tile.MINE and tile.state == Tile.COVERED:
-                    self.change_state(tile, Tile.CLICKED)
+                    self.change_stat(tile, Tile.CLICKED)
                     self.covered -= 1
-                # if tile.value == Tile.MINE and tile.state == Tile.FLAGGED:
-                #     tile.state == Tile.FLAGGED
+                if tile.value == Tile.MINE and tile.state == Tile.FLAGGED:
+                    tile.state = Tile.CLICKED
                 if tile.value != Tile.MINE and tile.state == Tile.FLAGGED:
-                    self.change_state(tile, Tile.NOT_MINE)
+                    self.change_stat(tile, Tile.NOT_MINE)
                     self.covered -= 1
         return 1
 
-    def change_state(self, tile, new_state):
-        tile.state = new_state
+    def change_stat(self, tile, state):
+        tile.state = state
         self.history.append(tile)
 
     def click(self, y, x, btn):
@@ -141,13 +142,13 @@ class Minesweeper:
                     game_over = self.check_around(y, x)
                     self.moves += 1
                 else:
-                    self.change_state(tile, Tile.FLAGGED)
+                    self.change_stat(tile, Tile.FLAGGED)
                     self.covered -= 1
                     self.flags -= 1
             elif tile.state == Tile.CLICKED:
                 pass
             elif tile.state == Tile.FLAGGED:
-                self.change_state(tile, Tile.COVERED)
+                self.change_stat(tile, Tile.COVERED)
                 self.covered += 1
                 self.flags += 1
         elif btn == 1:
@@ -159,6 +160,7 @@ class Minesweeper:
             elif tile.state == Tile.FLAGGED:
                 pass
         if self.flags >= 0 and (self.mines - self.flags + self.covered) == self.mines:
+            self.game_over(y, x, 2)
             game_over = 2
 
         return game_over

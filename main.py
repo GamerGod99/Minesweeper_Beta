@@ -3,6 +3,26 @@ from Minesweeper import Minesweeper, Tile
 from settings import *
 
 
+class Timer:
+    def __init__(self):
+        self._start = 0
+        self._run = False
+        self._last = 0
+
+    def start(self):
+        if not self._run:
+            self._run = True
+            self._start = pygame.time.get_ticks()
+
+    def current(self):
+        current_time = (pygame.time.get_ticks() - self._start)//1000
+        return current_time if self._run else self._last
+
+    def stop(self):
+        self._last = self.current()
+        self._run = False
+
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -12,16 +32,18 @@ class Game:
 
     def board(self):
         self.ms = Minesweeper(COLS, ROWS, AMOUNT_MINES)
+        self.t = Timer()
         self.score_surface = pygame.Surface((W, H1))
         self.board_surface = pygame.Surface((W, H2))
+        self.font = pygame.font.SysFont("mono", FONT_SIZE)
         self.draw()
         pygame.display.flip()
 
     def draw(self):
         self.score_surface.fill(BACKGROUND_COLOR)
         self.score_surface.blit(button_off, (X_RESET_BUTTON, Y_RESET_BUTTON))
-        self.nr_flags = pygame.font.Font.render(pygame.font.SysFont("mono", FONT_SIZE), f"{self.ms.flags:>03}", True, (255, 0, 0))
-        self.time_text = pygame.font.Font.render(pygame.font.SysFont("mono", FONT_SIZE), "000", True, (255, 0, 0))
+        self.nr_flags = pygame.font.Font.render(self.font, f"{self.ms.flags:03}", True, (255, 0, 0))
+        self.time_text = pygame.font.Font.render(self.font, f"{self.t.current():03}", True, (255, 0, 0))
         self.score_surface.blit(self.nr_flags, (20, (H1 - FONT_SIZE) // 2))
         self.score_surface.blit(self.time_text, (W - self.time_text.get_width() - 20, (H1 - FONT_SIZE) // 2))
         self.screen.blit(self.score_surface, (0, 0))
@@ -56,10 +78,12 @@ class Game:
                         game_on = False
                         break
                     elif mouse_on and H1 <= my < H1 + H2:
+                        self.t.start()
                         if self.ms.click((my - H1) // TILESIZE, mx // TILESIZE, event.button):
                             mouse_on = False
-                    self.draw()
-                    pygame.display.flip()
+                            self.t.stop()
+            self.draw()
+            pygame.display.flip()
 
 
 if __name__ == "__main__":
